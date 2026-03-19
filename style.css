@@ -1,0 +1,22 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    
+    color: rgb(186, 186, 186);
+}
+
+canvas{
+    margin: auto;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-image: url('./img/cozinha_scenario.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
