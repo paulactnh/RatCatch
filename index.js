@@ -1,13 +1,7 @@
 let des = document.getElementById('des').getContext('2d')
 
-let carroInimigo = new CarroInimigo(1300, 325, 80, 50, './img/')
-let carroInimigo2 = new CarroInimigo(1500, 125, 80, 50, '/img/carro_03_bg.png')
-let carroInimigo3 = new CarroInimigo(1700, 400, 80, 50, '/img/carro_04_bg.png')
-let estrada = new Estrada(10, 345, 40, 10, 'white')
-let estrada2 = new Estrada(80, 345, 40, 10, 'blue')
-let estrada3 = new Estrada(140, 345, 40, 10, 'green')
-let carro = new Carro(100, 325, 80, 50, '../img/andar0.png')
-// let medidaCarro = new Carro(100, 325, 85, 50, 'green')
+let rat = new Rat(1300, 325, 80, 50, './img/')
+let cat = new Cat(10, 325, 85, 99, '../img/andar0.png')
 
 let t1 = new Text()
 let t2 = new Text()
@@ -25,22 +19,22 @@ let fase = 1
 document.addEventListener('keydown', (e) => {
     motor.play()
     if (e.key === 'w' || e.key === 'ArrowUp') {
-        carro.dir -= 10
+        cat.dir -= 10
     } else if (e.key === 's' || e.key === 'ArrowDown') {
-        carro.dir += 10
+        cat.dir += 10
     }
 })
 
 document.addEventListener('keyup', (e) => {
     if (e.key === 'w' || e.key === 'ArrowUp') {
-        carro.dir = 0
+        cat.dir = 0
     } else if (e.key === 's' || e.key === 'ArrowDown') {
-        carro.dir = 0
+        cat.dir = 0
     }
 })
 
 function game_over() {
-    if (carro.vida <= 0) {
+    if (cat.vida <= 0) {
         jogar = false
         motor.pause()
         // música com o jogo parado
@@ -48,85 +42,61 @@ function game_over() {
 }
 
 function ver_fase() { 
-    if (carro.pontos > 20 && fase === 1) {
+    if (cat.pontos > 20 && fase === 1) {
         fase = 2
         
-        carroInimigo.vel = 4
-        carroInimigo2.vel = 4
-        carroInimigo3.vel = 4
-    } else if (carro.pontos > 40 && fase === 2) {
+        rat.vel = 4
+    } else if (cat.pontos > 40 && fase === 2) {
         fase = 3
-        carroInimigo.vel = 6
-        carroInimigo2.vel = 6
-        carroInimigo3.vel = 6
+        rat.vel = 6
     }
 }
 
 function colisao() {
-    if (carro.colid(carroInimigo)) {
+    if (cat.colid(rat)) {
         batida.play()
-        carroInimigo.recomeca()
-        carro.vida -= 1
+        rat.recomeca()
+        cat.vida -= 1
 
     }
-    if (carro.colid(carroInimigo2)) {
-        batida.play()
-        carroInimigo2.recomeca()
-        carro.vida -= 1
-    }
-    if (carro.colid(carroInimigo3)) {
-        batida.play()
-        carroInimigo3.recomeca()
-        carro.vida -= 1
-    }
-    console.log('vida: ', carro.vida)
+    // console.log('vida: ', cat.vida)
 }
 
 function pontuacao() {
-    if (carro.point(carroInimigo)) {
-        carro.pontos += 5
-        carroInimigo.recomeca()
+    if (cat.point(rat)) {
+        cat.pontos += 5
+        rat.recomeca()
     }
-    if (carro.point(carroInimigo2)) {
-        carro.pontos += 5
-        carroInimigo2.recomeca()
-    }
-    if (carro.point(carroInimigo3)) {
-        carro.pontos += 5
-        carroInimigo3.recomeca()
-    }
+//     if (cat.point(rat2)) {
+//         cat.pontos += 5
+//         rat2.recomeca()
+//     }
+//     if (cat.point(rat3)) {
+//         cat.pontos += 5
+//         rat3.recomeca()
+//     }
 }
 
 function desenha() {
 
     if (jogar) {
-        estrada.des_quad()
-        estrada2.des_quad()
-        estrada3.des_quad()
-        carroInimigo.des_carro()
-        carroInimigo2.des_carro()
-        carroInimigo3.des_carro()
-        carro.des_carro()
-        t1.des_text('Pontos: ' + carro.pontos, 1000, 40, 'yellow', '26px Arial')
-        t2.des_text('Vidas: ' + carro.vida, 40, 40, 'red', '26px Arial')
+        rat.des_cat()
+        cat.des_cat()
+        t1.des_text('Pontos: ' + cat.pontos, 1000, 40, 'yellow', '26px Arial')
+        t2.des_text('Vidas: ' + cat.vida, 40, 40, 'red', '26px Arial')
         fase_txt.des_text('Fase: ' + fase, 550, 40, 'white', '26px Arial')
     }else{
         t1.des_text('GAME OVER', 450, 350, 'yellow', '60px Arial')
-        t2.des_text('Pontuação Final: ' + carro.pontos, 480, 400, 'white', '25px Arial')
+        t2.des_text('Pontuação Final: ' + cat.pontos, 480, 400, 'white', '25px Arial')
     }
 
 }
 
 function atualiza() {
     if (jogar) {
-        carro.mov_car()
-        carro.anim('carro_00')
-        carroInimigo.mov_car()
-        carroInimigo2.mov_car()
-        carroInimigo3.mov_car()
-        estrada.mov_est()
-        estrada2.mov_est()
-        estrada3.mov_est()
+        cat.mov_cat()
+        cat.anim('andar')
+        rat.mov_rat()
         colisao()
         pontuacao()
         ver_fase()

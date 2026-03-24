@@ -7,7 +7,7 @@ class Obj{
         this.a = a
     }
 
-    des_carro(){
+    des_cat(){
         let img = new Image()
         img.src = this.a
         des.drawImage(img, this.x, this.y, this.w, this.h)
@@ -15,7 +15,7 @@ class Obj{
 
 }
 
-class Carro extends Obj{
+class Cat extends Obj{
 
     dir = 0
     vida = 5
@@ -57,10 +57,10 @@ class Carro extends Obj{
             this.tempo = 0
             this.frame +=1
         }
-        if(this.frame>4){
+        if(this.frame>2){
             this.frame=1
         }
-        //carro_001_bg
+        //cat_001_bg
         this.a = "./img/"+nome+this.frame+".png"
     }
 
@@ -68,7 +68,7 @@ class Carro extends Obj{
     
 }
 
-class CarroInimigo extends Obj{
+class Rat extends Obj{
 
     vel = 2
 
@@ -77,7 +77,7 @@ class CarroInimigo extends Obj{
         this.y =  Math.floor(Math.random() * (638 - 62) + 62)
     }
 
-    mov_car(){
+    mov_rat(){
         this.x -= this.vel
         if(this.x <= - 200){            
             this.recomeca()         
