@@ -20,8 +20,7 @@ class Cat extends Obj{
     dir = 0
     vida = 5
     pontos = 0
-    frame = 1
-    tempo = 0
+   
 
     mov_cat(){
         this.y += this.dir
@@ -51,20 +50,20 @@ class Cat extends Obj{
         }
     }
 
-    anim(nome){
+      frame = 0
+      tempo = 0
+      anim(nome){
         this.tempo +=1
         if(this.tempo > 12){
             this.tempo = 0
             this.frame +=1
         }
-        if(this.frame>2){
-            this.frame=1
+        if(this.frame>3){
+            this.frame=0
         }
         //cat_001_bg
         this.a = "./img/"+nome+this.frame+".png"
     }
-
-
     
 }
 
@@ -83,16 +82,26 @@ class Rat extends Obj{
             this.recomeca()         
         }
     }
+
+      frame = 0
+      tempo = 0
+      anim(nome){
+        this.tempo +=1
+        if(this.tempo > 12){
+            this.tempo = 0
+            this.frame +=1
+        }
+        if(this.frame>2){
+            this.frame=0
+        }
+        //cat_001_bg
+        this.a = "./img/"+nome+this.frame+".png"
+    }
+
 }
 
-// class Estrada extends Obj{
-//     mov_est(){
-//         this.x -= 6
-//         if(this.x < - 60){
-//             this.x = 1300
-//         }        
-//     }
-// }
+
+
 
 class Text{
     des_text(text,x,y,cor,font){

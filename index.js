@@ -1,6 +1,7 @@
 let des = document.getElementById('des').getContext('2d')
 
-let rat = new Rat(1300, 325, 80, 50, './img/')
+let rat = new Rat(1300, 325, 90, 50, './img/rato1.0.png')
+let rat2 = new Rat(1300, 325, 90, 50, './img/rato2.0.png')
 let cat = new Cat(10, 325, 85, 99, '../img/andar0.png')
 
 let t1 = new Text()
@@ -17,7 +18,7 @@ let jogar = true
 let fase = 1
 
 document.addEventListener('keydown', (e) => {
-    motor.play()
+    // motor.play()
     if (e.key === 'w' || e.key === 'ArrowUp') {
         cat.dir -= 10
     } else if (e.key === 's' || e.key === 'ArrowDown') {
@@ -59,7 +60,7 @@ function colisao() {
         cat.vida -= 1
 
     }
-    // console.log('vida: ', cat.vida)
+    console.log('colidiu')
 }
 
 function pontuacao() {
@@ -82,6 +83,7 @@ function desenha() {
     if (jogar) {
         rat.des_cat()
         cat.des_cat()
+        rat2.des_cat()
         t1.des_text('Pontos: ' + cat.pontos, 1000, 40, 'yellow', '26px Arial')
         t2.des_text('Vidas: ' + cat.vida, 40, 40, 'red', '26px Arial')
         fase_txt.des_text('Fase: ' + fase, 550, 40, 'white', '26px Arial')
@@ -97,6 +99,9 @@ function atualiza() {
         cat.mov_cat()
         cat.anim('andar')
         rat.mov_rat()
+        rat.anim('rato1.')
+        rat2.mov_rat()
+        rat2.anim('rato2.')
         colisao()
         pontuacao()
         ver_fase()
