@@ -1,7 +1,5 @@
 let des = document.getElementById('des').getContext('2d')
 
-let rat = new Rat(1300, 325, 90, 50, './img/rato1.0.png')
-let rat2 = new Rat(1300, 325, 90, 50, './img/rato2.0.png')
 let cat = new Cat(10, 325, 85, 99, '../img/andar0.png')
 
 let t1 = new Text()
@@ -17,6 +15,27 @@ batida.volume = 0.5
 let jogar = true
 let fase = 1
 
+function criarRatos() {
+    let lista = []
+    
+    for (let i = 0; i < 10; i++) {
+        let x = Math.floor(Math.random() * (1800 - 1000) + 1000)
+        let y = Math.floor(Math.random() * (600 - 180) + 180)
+
+        let tipo = i % 2 === 0 ? 'rato1.' : 'rato2.'
+        let img = './img/' + tipo + '0.png'
+        
+        let r = new Rat(x, y, 90, 50, img)
+        r.tipo = tipo 
+
+        lista.push(r)
+    }
+    
+    return lista
+}
+let rat = criarRatos()
+
+
 document.addEventListener('keydown', (e) => {
     // motor.play()
     if (e.key === 'w' || e.key === 'ArrowUp') {
@@ -29,8 +48,16 @@ document.addEventListener('keydown', (e) => {
 document.addEventListener('keyup', (e) => {
     if (e.key === 'w' || e.key === 'ArrowUp') {
         cat.dir = 0
-    } else if (e.key === 's' || e.key === 'ArrowDown') {
+        } else if (e.key === 's' || e.key === 'ArrowDown') {
         cat.dir = 0
+    }
+})
+
+document.addEventListener('keydown', (e)=>{
+    if (e.key === 'w' || e.key === 'ArrowUp') {
+        cat.anim('cima_andar')
+    } else if (e.key === 's' || e.key === 'ArrowDown') {
+        cat.anim('baixo_andar')
     }
 })
 
@@ -54,18 +81,18 @@ function ver_fase() {
 }
 
 function colisao() {
-    if (cat.colid(rat)) {
-        batida.play()
-        rat.recomeca()
-        cat.vida -= 1
-
+    for (let r of rat) {
+        if (cat.colid(r)) {
+            r.recomeca()
+            batida.play()
+            cat.pontos += 5 
+        }
     }
-    console.log('colidiu')
 }
 
 function pontuacao() {
     if (cat.point(rat)) {
-        cat.pontos += 5
+        cat.vida -= 1
         rat.recomeca()
     }
 //     if (cat.point(rat2)) {
@@ -81,9 +108,10 @@ function pontuacao() {
 function desenha() {
 
     if (jogar) {
-        rat.des_cat()
         cat.des_cat()
-        rat2.des_cat()
+        for (let r of rat) {
+            r.des_cat()
+        }
         t1.des_text('Pontos: ' + cat.pontos, 1000, 40, 'yellow', '26px Arial')
         t2.des_text('Vidas: ' + cat.vida, 40, 40, 'red', '26px Arial')
         fase_txt.des_text('Fase: ' + fase, 550, 40, 'white', '26px Arial')
@@ -98,10 +126,10 @@ function atualiza() {
     if (jogar) {
         cat.mov_cat()
         cat.anim('andar')
-        rat.mov_rat()
-        rat.anim('rato1.')
-        rat2.mov_rat()
-        rat2.anim('rato2.')
+       for(r  of rat){
+        r.mov_rat()
+        r.anim(r.tipo)
+       }
         colisao()
         pontuacao()
         ver_fase()

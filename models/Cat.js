@@ -24,10 +24,10 @@ class Cat extends Obj{
 
     mov_cat(){
         this.y += this.dir
-        if(this.y < 62){
-            this.y = 62
-        }else if(this.y > 692){
-            this.y = 692
+        if(this.y < 150){
+            this.y = 150
+        }else if(this.y > 500){
+            this.y = 500
         }
     }
 
@@ -69,11 +69,11 @@ class Cat extends Obj{
 
 class Rat extends Obj{
 
-    vel = 2
+    vel = 3
 
     recomeca(){
-        this.x = 1300
-        this.y =  Math.floor(Math.random() * (638 - 62) + 62)
+        this.x = Math.floor(Math.random() * (1800 - 1000) + 1000)
+        this.y =  Math.floor(Math.random() * (600 - 180) + 180)
     }
 
     mov_rat(){
