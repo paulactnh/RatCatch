@@ -22,7 +22,9 @@ function criarRatos() {
         let x = Math.floor(Math.random() * (1800 - 1000) + 1000)
         let y = Math.floor(Math.random() * (600 - 180) + 180)
 
-        let tipo = i % 2 === 0 ? 'rato1.' : 'rato2.'
+        let tipo =  i % 3 === 0 ? 'rato1.' 
+                    : i % 3 === 1 ? 'rato2.' 
+                    : 'rato3.'
         let img = './img/' + tipo + '0.png'
         
         let r = new Rat(x, y, 90, 50, img)
