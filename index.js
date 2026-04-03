@@ -6,14 +6,16 @@ let t1 = new Text()
 let t2 = new Text()
 let fase_txt = new Text()
 
-let motor = new Audio('./img/motor.wav')
-let batida = new Audio('./img/batida.mp3')
-motor.volume = 0.5
-motor.loop = true
-batida.volume = 0.5
-
+let music = new Audio('./img/music.mp3')
+let miau = new Audio('./img/cat_meow.mp3')
+let squeak = new Audio('./img/rat_squeak2.mp3')
+music.volume = 0.5
+music.loop = true
+miau.volume = 0.2
 let jogar = true
 let fase = 1
+music.play()
+
 
 function criarRatos() {
     let lista = []
@@ -37,7 +39,6 @@ let rat = criarRatos()
 
 
 document.addEventListener('keydown', (e) => {
-    // motor.play()
     if (e.key === 'w' || e.key === 'ArrowUp') {
         cat.dir -= 10
     } else if (e.key === 's' || e.key === 'ArrowDown') {
@@ -64,17 +65,17 @@ document.addEventListener('keydown', (e)=>{
 function game_over() {
     if (cat.vida <= 0) {
         jogar = false
-        motor.pause()
+        music.pause()
         // música com o jogo parado
-    }
+    }else{music.play()}
 }
 
 function ver_fase() { 
-    if (cat.pontos > 20 && fase === 1) {
+    if (cat.pontos > 200 && fase === 1) {
         fase = 2
         
         rat.vel = 4
-    } else if (cat.pontos > 40 && fase === 2) {
+    } else if (cat.pontos > 400 && fase === 2) {
         fase = 3
         rat.vel = 6
     }
@@ -84,18 +85,20 @@ function colisao() {
     for (let r of rat) {
         if (cat.colid(r)) {
             r.recomeca()
-            batida.play()
+            squeak.play()
             cat.pontos += 5 
         }
     }
 }
 
-function pontuacao() {
-    if (cat.point(rat)) {
-        cat.vida -= 1
-        rat.recomeca()
+function vidas() {
+    for(let r of rat){
+        if (cat.point(r)) {
+            cat.vida -= 0.5
+            r.recomeca()
+        }
     }
-//     if (cat.point(rat2)) {
+        //     if (cat.point(rat2)) {
 //         cat.pontos += 5
 //         rat2.recomeca()
 //     }
@@ -104,6 +107,8 @@ function pontuacao() {
 //         rat3.recomeca()
 //     }
 }
+
+
 
 function desenha() {
 
@@ -131,7 +136,7 @@ function atualiza() {
         r.anim(r.tipo)
        }
         colisao()
-        pontuacao()
+        vidas()
         ver_fase()
         game_over()
     }

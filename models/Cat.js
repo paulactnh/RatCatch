@@ -43,7 +43,7 @@ class Cat extends Obj{
     }
 
     point(objeto){
-        if(objeto.x <= -100){
+        if(objeto.x < this.x){
             return true
         }else{
             return false
