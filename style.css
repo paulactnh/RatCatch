@@ -21,5 +21,20 @@ canvas{
     background-position: center;
 }
 
+.des.fase1 {
+    background-image: url('./img/fundo1.png');
+    background-size: cover;
+}
+
+.des.fase2 {
+    background-image: url('./img/fundo2.png');
+    background-size: cover;
+}
+
+.des.fase3 {
+    background-image: url('./img/fundo3.png');
+    background-size: cover;
+}
+
 
 

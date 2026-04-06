@@ -1,113 +1,105 @@
-class Obj{
-    constructor(x,y,w,h,a){
+class Obj {
+    constructor(x, y, w, h, src) {
         this.x = x
         this.y = y
         this.w = w
         this.h = h
-        this.a = a
+        this.img = new Image()
+        this.img.src = src
+        this.danoTempo = 0
     }
 
-    des_cat(){
-        let img = new Image()
-        img.src = this.a
-        des.drawImage(img, this.x, this.y, this.w, this.h)
+    des_cat() {
+        if (this.danoTempo > 0) {
+            des.globalAlpha = 0.5
+            this.danoTempo--
+        }
+        des.drawImage(this.img, this.x, this.y, this.w, this.h)
+        des.globalAlpha = 1
     }
 
+    setImagem(src) {
+        if (this.img.src !== src) {
+            this.img.src = src
+        }
+    }
 }
 
-class Cat extends Obj{
-
+class Cat extends Obj {
     dir = 0
     vida = 5
     pontos = 0
-   
+    frame = 0
+    tempo = 0
 
-    mov_cat(){
+    mov_cat() {
         this.y += this.dir
-        if(this.y < 150){
-            this.y = 150
-        }else if(this.y > 500){
-            this.y = 500
-        }
+        if(this.y < 150) this.y = 150
+        else if(this.y > 530) this.y = 530
     }
 
-    colid(objeto){
-        if((this.x < objeto.x + objeto.w)&&
-          (this.x + this.w > objeto.x)&&
-          (this.y < objeto.y + objeto.h)&&
-          (this.y + this.h > objeto.y)){
-            return true
-        }else{
-            return false
-        }
+    colid(obj) {
+        return (this.x < obj.x + obj.w &&
+                this.x + this.w > obj.x &&
+                this.y < obj.y + obj.h &&
+                this.y + this.h > obj.y)
     }
 
-    point(objeto){
-        if(objeto.x < this.x){
-            return true
-        }else{
-            return false
-        }
+    point(obj) {
+        return obj.x < this.x
     }
 
-      frame = 0
-      tempo = 0
-      anim(nome){
-        this.tempo +=1
+    anim(nome) {
+        if(nome === 'cima_andar' || nome === 'baixo_andar'){
+            this.w = 70
+            this.h = 120
+        } else if(nome === 'andar'){
+            this.w = 90
+            this.h = 105
+        }
+
+        this.tempo++
         if(this.tempo > 12){
             this.tempo = 0
-            this.frame +=1
+            this.frame++
         }
-        if(this.frame>3){
-            this.frame=0
-        }
-        //cat_001_bg
-        this.a = "./img/"+nome+this.frame+".png"
+        if(this.frame > 3) this.frame = 0
+
+        this.setImagem("./img/"+nome+this.frame+".png")
     }
-    
 }
 
-class Rat extends Obj{
-
+class Rat extends Obj {
     vel = 3
+    frame = 0
+    tempo = 0
 
-    recomeca(){
+    recomeca() {
         this.x = Math.floor(Math.random() * (1800 - 1000) + 1000)
-        this.y =  Math.floor(Math.random() * (600 - 180) + 180)
+        this.y = Math.floor(Math.random() * (630 - 210) + 210)
     }
 
-    mov_rat(){
+    mov_rat() {
         this.x -= this.vel
-        if(this.x <= - 200){            
-            this.recomeca()         
-        }
+        if(this.x <= -200) this.recomeca()
     }
 
-      frame = 0
-      tempo = 0
-      anim(nome){
-        this.tempo +=1
+    anim(nome) {
+        this.tempo++
         if(this.tempo > 12){
             this.tempo = 0
-            this.frame +=1
+            this.frame++
         }
-        if(this.frame>2){
-            this.frame=0
-        }
-        //cat_001_bg
-        this.a = "./img/"+nome+this.frame+".png"
-    }
+        if(this.frame > 2) this.frame = 0
 
+        this.setImagem("./img/"+nome+this.frame+".png")
+    }
 }
 
-
-
-
-class Text{
-    des_text(text,x,y,cor,font){
+class Text {
+    des_text(text, x, y, cor, font){
         des.fillStyle = cor
-        des.lineWidth = '5'
         des.font = font
-        des.fillText(text,x,y)
+        des.fillText(text, x, y)
     }
 }
