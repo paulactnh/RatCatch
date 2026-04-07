@@ -7,6 +7,8 @@ let fundoFase2 = new Image()
 fundoFase2.src = './img/scenario2.png'
 let fundoFase3 = new Image()
 fundoFase3.src = './img/scenario1.png'
+let fundoGameOver = new Image()
+fundoGameOver.src = './img/gameOver.png'
 
 let cat = new Cat(50, 325, 90, 105, '../img/andar0.png')
 cat.danoTempo = 0
@@ -118,6 +120,7 @@ function game_over() {
     if (cat.vida <= 0) {
         jogar = false
         music.pause()
+        des.drawImage(fundoGameOver,0,0,1300,850)
     } else { music.play() }
 }
 
@@ -276,33 +279,28 @@ function desenhaRatos() {
 
 function desenha() {
     if (!jogar) {
+        des.drawImage(fundoGameOver,0,0,1300,850)
         t1.des_text('GAME OVER', 450, 350, 'yellow', '60px Arial')
         return
     }
 
     des.clearRect(0, 0, 1300, 850)
 
-    // fundo escuro + luz
         desenhaFundo()
     desenhaFundoComLuz()
 
-    // ratos (fase 3 antes do chefão ou fases anteriores)
     if (!bossAtivo) desenhaRatos()
 
-    // gato
     cat.des_cat()
 
-    // chefão
     if (bossAtivo) {
         boss.des_cat()
         des.fillStyle = 'red'
         des.fillRect(300, 20, boss.vida * 20, 20)
     }
 
-    // cabeçalho
     cabecalho()
 
-    // texto de fase
     if (faseTextoTempo > 0) {
         des.fillStyle = 'white'
         des.font = '50px Arial'
@@ -320,7 +318,6 @@ function atualiza() {
     cat.mov_cat()
     cat.anim(cat.nome)
 
-    // Ratos (apenas se não houver boss)
     if (!bossAtivo) {
         for (let r of rat) {
             r.mov_rat()
@@ -329,24 +326,19 @@ function atualiza() {
         interacaoRatos()
     }
 
-    // Boss ativo
     if (bossAtivo) {
         boss.x -= boss.vel
 
-        // Boss segue o gato
         if (boss.y < cat.y) boss.y += 2
         else boss.y -= 2
 
-        // Colisão com o gato
         if (cat.colid(boss)) {
             boss.vida -= 1
         }
     }
 
-    // Controla evolução das fases
     controlarFase()
 
-    // Checa game over
     game_over()
 }
 
