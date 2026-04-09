@@ -1,6 +1,8 @@
 //imgs/desenhos
 let des = document.getElementById('des').getContext('2d')
-
+let menu = new Menu()
+let estado = "menu"
+let fase = 0
 let fundoFase1 = new Image()
 fundoFase1.src = './img/scenario1.png'
 let fundoFase2 = new Image()
@@ -9,6 +11,16 @@ let fundoFase3 = new Image()
 fundoFase3.src = './img/scenario1.png'
 let fundoGameOver = new Image()
 fundoGameOver.src = './img/gameOver.png'
+let fundoMenu = new Image()
+fundoMenu.src = './img/menu.gif'
+
+//-----menu settings------
+let piscaTempo = 0
+let mostrarTexto = true
+let fade = 0
+let fadeSaindo = false
+let fadeEntrando = false
+//------------------------
 
 let cat = new Cat(50, 325, 90, 105, '../img/andar0.png')
 cat.danoTempo = 0
@@ -25,33 +37,19 @@ let fase_txt = new Text()
 let music = new Audio('./img/music.mp3')
 let miau = new Audio('./img/cat_meow.mp3')
 let squeak = new Audio('./img/rat_squeak2.mp3')
-music.volume = 0.5
-music.loop = true
-miau.volume = 0.2
-music.play()
+
 
 //outros
 let boss = null
 let bossAtivo = false
 let faseTextoTempo = 0
-let jogar = true
-let fase = 1
-
 let hearts = []
 
 
-function desenhaFundo() {
-    if(fase===1) des.drawImage(fundoFase1,0,0,1300,850)
-    else if(fase===2) des.drawImage(fundoFase2,0,0,1300,850)
-    else if(fase===3) des.drawImage(fundoFase3,0,0,1300,850)
-}
 
 
-for (let i = 0; i <= 5; i++) {
-    let img = new Image()
-    img.src = './img/hearts' + i + '.png'
-    hearts.push(img)
-}
+
+
 
 function desenhaVidas() {
     let vida = cat.vida
@@ -89,7 +87,6 @@ function criarRatos() {
 
     return lista
 }
-let rat = criarRatos()
 
 
 document.addEventListener('keydown', (e) => {
@@ -111,16 +108,36 @@ document.addEventListener('keyup', (e) => {
         cat.nome = 'andar'
     }
 })
+document.addEventListener('keydown', (e) => {
+    if (estado === "menu" && e.key === "Enter") {
+        fadeSaindo = true
+    }
+})
 
 
+function iniciarJogo() {
+    estado = "jogo"
+    cat.vida = 5
+    cat.pontos = 0
+    fase = 1
+    rat = criarRatos()
 
+    music.volume = 0.5
+    music.loop = true
+    miau.volume = 0.2
+    music.play()
 
+    for (let i = 0; i <= 5; i++) {
+    let img = new Image()
+    img.src = './img/hearts' + i + '.png'
+    hearts.push(img)
+}
+}
 
 function game_over() {
     if (cat.vida <= 0) {
-        jogar = false
+        estado = "gameOver"
         music.pause()
-        des.drawImage(fundoGameOver,0,0,1300,850)
     } else { music.play() }
 }
 
@@ -154,36 +171,9 @@ function interacaoRatos() {
     }
 }
 
-function cabecalho() {
-
-    let largura = 1300
-
-    des.globalAlpha = 0.5
-    des.fillStyle = 'black'
-    des.fillRect(0, 0, largura, 80)
-    des.globalAlpha = 1
-
-    // VIDAS
-    des.drawImage(hearts[cat.vida], 20, 20, 180, 40)
-
-    //FASE
-    des.fillStyle = 'white'
-    des.font = '28px Arial'
-    des.textAlign = 'center'
-    des.fillText('FASE ' + fase, largura / 2, 45)
-
-    // PONTOS
-    des.textAlign = 'right'
-    des.fillStyle = 'yellow'
-    des.drawImage(coin, largura - 120, 20, 30, 30)
-    des.fillText(cat.pontos, largura - 130, 45)
-
-    des.textAlign = 'start'
-}
 
 
-
-//FASES
+//-----------FASES------------
 function controlarFase() {
     if (cat.pontos >= 10 && fase === 1) {
         fase = 2
@@ -229,7 +219,7 @@ function iniciarBoss() {
 
 
 
-// FASE 3 FUNCOES
+//--------FASE 3 FUNCOES---------
 function desenhaFundoComLuz() {
     if (fase !== 3) return
 
@@ -275,23 +265,98 @@ function desenhaRatos() {
 
 
 
+//---------------MENU----------------
+  let framesMenu = []
 
-
-function desenha() {
-    if (!jogar) {
-        des.drawImage(fundoGameOver,0,0,1300,850)
-        t1.des_text('GAME OVER', 450, 350, 'yellow', '60px Arial')
-        return
+    for (let i = 0; i <= 27; i++) {
+        let img = new Image()
+        img.src = "./img/gif/frame_" + i + ".gif"
+        framesMenu.push(img)
     }
 
-    des.clearRect(0, 0, 1300, 850)
 
-        desenhaFundo()
-    desenhaFundoComLuz()
 
-    if (!bossAtivo) desenhaRatos()
+function desenhaMenu(){
+    let img = framesMenu[menu.frame]
+    if (!img || !img.complete) return
+
+    des.drawImage(img, 0, 0, 1300, 850)
+    menu.anim()
+
+    // 🔹 desenha título
+    menu.desenhaTitulo()
+
+        piscaTempo++
+    if (piscaTempo > 30) {
+        mostrarTexto = !mostrarTexto
+        piscaTempo = 0
+    }
+
+    if (mostrarTexto) {
+        des.fillStyle = "white"
+        des.font = "40px Silkscreen"
+        des.textAlign = "center"
+        des.fillText("PRESSIONE ENTER PARA COMEÇAR", 650, 500)
+        des.textAlign = "start"
+    }
+    
+
+    // fade saindo
+    if (fadeSaindo) {
+        fade += 0.02
+        des.fillStyle = "rgba(0,0,0," + fade + ")"
+        des.fillRect(0, 0, 1300, 850)
+
+        if (fade >= 1) {
+            iniciarJogo()
+            fade = 1
+            fadeSaindo = false
+            fadeEntrando = true
+        }
+    }
+}
+
+// CABEÇALHO DO JOGO
+function cabecalho(){
+    let largura = 1300;
+
+    // fundo transparente
+    des.globalAlpha = 0.5;
+    des.fillStyle = 'black';
+    des.fillRect(0, 0, largura, 80);
+    des.globalAlpha = 1;
+
+    // VIDAS
+    des.drawImage(hearts[cat.vida], 20, 20, 180, 40);
+
+    // FASE
+    des.font = "30px 'Press Start 2P'";
+    des.textAlign = 'center';
+    des.fillStyle = "#ae00ff"; 
+    des.strokeStyle = "black";
+    des.lineWidth = 1;
+    des.shadowColor = "rgba(0,0,0,0.5)";
+    des.shadowBlur = 3;
+    des.fillText('FASE ' + fase, largura / 2, 55);
+    des.strokeText('FASE ' + fase, largura / 2, 55);
+
+    // PONTOS
+    des.font = "25px 'Press Start 2P'"
+    des.textAlign = 'right';
+    des.fillStyle = "#FFD700"; // dourado
+    des.drawImage(coin, largura - 120, 25, 30, 30);
+    des.fillText(cat.pontos, largura - 130, 55);
+    des.strokeText(cat.pontos, largura - 130, 55);
+
+    des.textAlign = 'start';
+}
+
+
+function desenhaJogo(){
 
     cat.des_cat()
+    if (!bossAtivo) desenhaRatos()
+
 
     if (bossAtivo) {
         boss.des_cat()
@@ -308,13 +373,58 @@ function desenha() {
         let texto = bossAtivo ? 'CHEFÃO!' : 'FASE ' + fase
         des.fillText(texto, 600, 350)
         des.textAlign = 'start'
-        faseTextoTempo--
+        faseTextoTempo-- 
+    }
+
+}
+
+function desenhaGameOver() {
+    des.drawImage(fundoGameOver,0,0,1300,850)
+        t1.des_text('GAME OVER', 450, 350, 'yellow', '60px Arial')
+}
+
+
+
+
+function desenha() {
+    des.clearRect(0, 0, 1300, 850)
+
+    if (estado === "menu") {
+        desenhaMenu()
+        return
+    }
+
+    else if (estado === "gameover") {
+        desenhaGameOver()
+        return
+    } 
+    else if(estado === "jogo"){
+
+    if(fase===1) des.drawImage(fundoFase1,0,0,1300,850)
+        else if(fase===2) des.drawImage(fundoFase2,0,0,1300,850)
+        else if(fase===3) des.drawImage(fundoFase3,0,0,1300,850)
+
+    desenhaFundoComLuz()
+
+    desenhaJogo()
+
+    if (fadeEntrando) {
+        fade -= 0.02
+
+        des.fillStyle = "rgba(0,0,0," + fade + ")"
+        des.fillRect(0, 0, 1300, 850)
+
+        if (fade <= 0) {
+            fade = 0
+            fadeEntrando = false
+        }
+    }
     }
 }
 
-function atualiza() {
-    if (!jogar) return
 
+function atualiza() {
+    if (estado !== "jogo") return
     cat.mov_cat()
     cat.anim(cat.nome)
 

@@ -103,3 +103,51 @@ class Text {
         des.fillText(text, x, y)
     }
 }
+
+class Menu{
+    constructor(){
+        this.frame = 0
+        this.tempo = 0
+    }
+
+  anim() {
+    this.tempo++
+
+    if (this.tempo > 10) {
+        this.tempo = 0
+        this.frame++
+    }
+
+    if (this.frame >= 27) this.frame = 0
+  }
+
+  desenhaTitulo() {
+    let texto = "Rat Catch"
+
+    // sombra 
+    des.shadowColor = "black"
+    des.shadowBlur = 15
+    des.shadowOffsetX = 5
+    des.shadowOffsetY = 5
+
+    //  gradiente do título
+    let grad = des.createLinearGradient(0, 150, 0, 270) 
+    grad.addColorStop(0, "#eeff00")   
+    grad.addColorStop(1, "#d67432") 
+    des.fillStyle = grad
+
+    // fonte e alinhamento
+    des.font = '120px "Silkscreen"'
+    des.textAlign = "center"
+    des.fillText(texto, 650, 240)
+
+    //  reset sombra
+    des.shadowColor = "transparent"
+    des.shadowBlur = 0
+    des.shadowOffsetX = 0
+    des.shadowOffsetY = 0
+}
+
+
+   
+}
